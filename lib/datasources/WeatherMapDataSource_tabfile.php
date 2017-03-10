@@ -26,10 +26,14 @@ class WeatherMapDataSource_tabfile extends WeatherMapDataSource {
 		$data_time=0;
 		$itemname = $item->name;
 
+		#allow these chars in itemname:  : - /
+		$itemname = str_replace(':','\:',$itemname);
+		$itemname = str_replace('/','\/',$itemname);
+		$itemname = str_replace('-','\-',$itemname);
+
 		$matches=0;
 
 		$fd=fopen($targetstring, "r");
-
 		if ($fd)
 		{
 			while (!feof($fd))

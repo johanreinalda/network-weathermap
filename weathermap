@@ -50,6 +50,7 @@ $long_opts=array
 		"dumpafter",
 		"bulge",
 		"sizedebug",
+		"refreshrate=",
 		"dumpconfig="
 	);
 
@@ -156,6 +157,10 @@ if (sizeof($gopts) > 0)
 			}            
             break;
 
+		case '--refreshrate':
+			$options_output['refreshrate']=$o[1];
+			break;
+
 		case '--version': 
 			print 'PHP Network Weathermap v' . $WEATHERMAP_VERSION."\n";
 			exit();
@@ -184,6 +189,7 @@ if (sizeof($gopts) > 0)
 						print " --dump-after             -  dump all internal PHP structures (HUGE)\n";
                         print " --dumpconfig {filename}  -  filename to write a new config to (for testing)\n\n";
                         
+			print " --refreshrate {seconds}  -  set the refresh rate for the HTML page (in seconds)\n";
                         print " --help                   -  show this help\n";
                         print " --version                -  show version number\n\n";
                         print "More info at http://www.network-weathermap.com/\n";
@@ -266,7 +272,13 @@ if ($map->ReadConfig($configfile))
 		fwrite($fd,
 			'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>');
 		if($map->htmlstylesheet != '') fwrite($fd,'<link rel="stylesheet" type="text/css" href="'.$map->htmlstylesheet.'" />');
-		fwrite($fd,'<meta http-equiv="refresh" content="300" /><title>' . $map->ProcessString($map->title, $map) . '</title></head><body>');
+
+		$refreshrate = 300;
+		if(isset($options_output['refreshrate']))
+		{
+			$refreshrate = $options_output['refreshrate'];
+		}
+		fwrite($fd,'<meta http-equiv="refresh" content="' . $refreshrate . '" /><title>' . $map->ProcessString($map->title, $map) . '</title></head><body>');
 
 		if ($map->htmlstyle == "overlib")
 		{
