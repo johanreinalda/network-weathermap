@@ -19,6 +19,15 @@ Modification include:
   AKIPS, by defaults, exports the link data as "device:port",
   where the ports can something like eth1/0/2, or Ten-GigabitEthernet1/4/8
 
-  Note this change is in the "tab datafile" import module
-	"lib/datasources/WeatherMapDataSource_tabfile.php"
+  Note this changes the "tab datafile" import module
+	lib/datasources/WeatherMapDataSource_tabfile.php
 
+* added INFOURLTARGET attribute to NODEs and LINKs, to allow opening in a new window
+  if set on NODE or LINK  (or their DEFAULT definition),
+  this will add the "target=<string>" attribute to the HTML 'href' generated
+  for the URLINFO attribute.
+	Changes in 
+		lib\Weathermap.class.php
+		lib\WeatherMap.keywords.inc.php
+		lib\WeatherMapNode.class.php
+		lib\WeatherMapLink.class.php

@@ -1,3 +1,8 @@
+This is PHP Network Weathermap 0.98
+with modification for use with the AKIPS network monitoring software (www.akips.com).
+See README.AKIPS.txt for more details.
+
+==============================
 ## PHP Network Weathermap 0.98
 
 This is PHP Network Weathermap, version 0.98 by Howard Jones (howie@thingy.com)

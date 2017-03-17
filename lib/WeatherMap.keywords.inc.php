@@ -356,6 +356,11 @@ $WM_config_keywords2 = array (
                 'infourl[OUT]' => 1
             )
         ),),
+        'INFORURLTARGET' => array (array (
+            'NODE',
+            "/^INFOURLTARGET\s+(.*)\s*$/i",
+            array ('infourltarget' => 1)
+        ),),
         'OVERLIBCAPTION' => array (array (
             'NODE',
             '/^OVERLIBCAPTION\s+(.*)\s*$/i',
@@ -731,6 +736,11 @@ $WM_config_keywords2 = array (
                 'infourl[IN]' => 1,
                 'infourl[OUT]' => 1
             )
+        ),),
+        'INFORURLTARGET' => array (array (
+            'LINK',
+            "/^INFOURLTARGET\s+(.*)\s*$/i",
+            array ('infourltarget' => 1)
         ),),
         'ININFOURL' => array (array (
             'LINK',

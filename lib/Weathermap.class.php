@@ -2035,9 +2035,12 @@ function ReadConfig($input, $is_include=FALSE)
 					array('LINK','/^\s*OUTNOTES\s+(.*)\s*$/i',array('notestext[OUT]'=>1)),
 					
 					array('NODE','/^\s*INFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1,'infourl[OUT]'=>1)),
+					array('NODE','/^\s*INFOURLTARGET\s+(.*)\s*$/i',array('infourltarget'=>1)),
 					array('LINK','/^\s*INFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1,'infourl[OUT]'=>1)),
+					array('LINK','/^\s*INFOURLTARGET\s+(.*)\s*$/i',array('infourltarget'=>1)),
 					array('LINK','/^\s*ININFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1)),
 					array('LINK','/^\s*OUTINFOURL\s+(.*)\s*$/i',array('infourl[OUT]'=>1)),
+
 					
 					array('NODE','/^\s*OVERLIBCAPTION\s+(.*)\s*$/i',array('overlibcaption[IN]'=>1,'overlibcaption[OUT]'=>1)),
 					array('LINK','/^\s*OVERLIBCAPTION\s+(.*)\s*$/i',array('overlibcaption[IN]'=>1,'overlibcaption[OUT]'=>1)),
@@ -3666,6 +3669,11 @@ function PreloadMapHTML()
 						if ( ($this->htmlstyle != 'editor') && ($myobj->infourl[$dir] != '') ) {
 							$this->imap->setProp("href", $this->ProcessString($myobj->infourl[$dir],$myobj), $areaname);
 							//print "Setting.\n";
+
+							//infourltarget set?
+							if($myobj->infourltarget != '') {
+								$this->imap->setProp("extrahtml", 'target="' . $myobj->infourltarget . '"', $areaname);
+							}
 						}
 						else
 						{
