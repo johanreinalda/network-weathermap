@@ -17,7 +17,6 @@ class WeatherMapLink extends WeatherMapItem
 	var $zorder;
 	var $overliburl = array();
 	var $infourl = array();
-	var $infourltarget;
 	var $notes;
 	var $overlibcaption = array();
 	var $overlibwidth,         $overlibheight;
@@ -74,6 +73,7 @@ class WeatherMapLink extends WeatherMapItem
 			'scaletype' => 'percent',
 			'targets' => array(),
 			'duplex' => 'full',
+			'akips' => 0,
 			'infourl' => array('',''),
 			'infourltarget' => '',
 			'notes' => array(),
@@ -549,6 +549,7 @@ class WeatherMapLink extends WeatherMapItem
 					array('outlinecolour','OUTLINECOLOR',CONFIG_TYPE_COLOR),
 					array('commentfontcolour','COMMENTFONTCOLOR',CONFIG_TYPE_COLOR),
 					array('bwfontcolour','BWFONTCOLOR',CONFIG_TYPE_COLOR),
+					array('akips','AKIPS',CONFIG_TYPE_LITERAL),
 					array('infourltarget','INFOURLTARGET',CONFIG_TYPE_LITERAL)
 				);
 			

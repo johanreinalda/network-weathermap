@@ -172,6 +172,8 @@ class WeatherMapItem extends WeatherMapBase
 
 	var $configline;
 	var $infourl;
+	var $infourltarget;
+	var $akips;
 	var $overliburl;
 	var $overlibwidth, $overlibheight;
 	var $overlibcaption;
@@ -190,6 +192,7 @@ class WeatherMap extends WeatherMapBase
 	var $used_images = array(); // an array of image filenames referred to (used by editor)
 	var $seen_zlayers = array(0=>array(),1000=>array()); // 0 is the background, 1000 is the legends, title, etc
 
+	var $akipsbaseurl;
 	var $config;
 	var $next_id;
 	var $min_ds_time;
@@ -268,6 +271,7 @@ class WeatherMap extends WeatherMapBase
 	{
 		$this->inherit_fieldlist=array
 			(
+				'akipsbaseurl' => '',
 				'width' => 800,
 				'height' => 600,
 				'kilo' => 1000,
@@ -1971,6 +1975,7 @@ function ReadConfig($input, $is_include=FALSE)
 					array('LINK','/^\s*(MAXVALUE|BANDWIDTH)\s+(\d+\.?\d*[KMGT]?)\s*$/i',array('max_bandwidth_in_cfg'=>2,'max_bandwidth_out_cfg'=>2)),
 					array('NODE','/^\s*(MAXVALUE)\s+(\d+\.?\d*[KMGT]?)\s+(\d+\.?\d*[KMGT]?)\s*$/i',array('max_bandwidth_in_cfg'=>2,'max_bandwidth_out_cfg'=>3)),
 					array('NODE','/^\s*(MAXVALUE)\s+(\d+\.?\d*[KMGT]?)\s*$/i',array('max_bandwidth_in_cfg'=>2,'max_bandwidth_out_cfg'=>2)),
+					array('GLOBAL','/^\s*AKIPSBASEURL\s+(.*)\s*$/i',array('akipsbaseurl'=>1)),
 					array('GLOBAL','/^\s*BACKGROUND\s+(.*)\s*$/i',array('background'=>1)),
 					array('GLOBAL','/^\s*HTMLOUTPUTFILE\s+(.*)\s*$/i',array('htmloutputfile'=>1)),
 					array('GLOBAL','/^\s*HTMLSTYLESHEET\s+(.*)\s*$/i',array('htmlstylesheet'=>1)),
@@ -2034,8 +2039,10 @@ function ReadConfig($input, $is_include=FALSE)
 					array('LINK','/^\s*INNOTES\s+(.*)\s*$/i',array('notestext[IN]'=>1)),
 					array('LINK','/^\s*OUTNOTES\s+(.*)\s*$/i',array('notestext[OUT]'=>1)),
 					
+					array('NODE','/^\s*AKIPS\s+(.*)\s*$/i',array('akips'=>1)),
 					array('NODE','/^\s*INFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1,'infourl[OUT]'=>1)),
 					array('NODE','/^\s*INFOURLTARGET\s+(.*)\s*$/i',array('infourltarget'=>1)),
+					array('LINK','/^\s*AKIPS\s+(.*)\s*$/i',array('akips'=>1)),
 					array('LINK','/^\s*INFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1,'infourl[OUT]'=>1)),
 					array('LINK','/^\s*INFOURLTARGET\s+(.*)\s*$/i',array('infourltarget'=>1)),
 					array('LINK','/^\s*ININFOURL\s+(.*)\s*$/i',array('infourl[IN]'=>1)),
@@ -2929,6 +2936,7 @@ function WriteConfig($filename)
 		}
 
 		$basic_params = array(
+			array('akipsbaseurl', 'AKIPSBASEURL', CONFIG_TYPE_LITERAL),
 			array('background', 'BACKGROUND', CONFIG_TYPE_LITERAL),
 			array('width', 'WIDTH', CONFIG_TYPE_LITERAL),
 			array('height', 'HEIGHT', CONFIG_TYPE_LITERAL),
@@ -3666,10 +3674,34 @@ function PreloadMapHTML()
 						$areaname = $type.":" . $prefix . $myobj->id. ":" . $part;
 						//print "INFOURL for $areaname - ";
 												
-						if ( ($this->htmlstyle != 'editor') && ($myobj->infourl[$dir] != '') ) {
-							$this->imap->setProp("href", $this->ProcessString($myobj->infourl[$dir],$myobj), $areaname);
-							//print "Setting.\n";
-
+						if ( ($this->htmlstyle != 'editor') ) {
+							if ($myobj->infourl[$dir] != '') {
+								$this->imap->setProp("href", $this->ProcessString($myobj->infourl[$dir],$myobj), $areaname);
+								//print "Setting.\n";
+							}
+							//if no INFOURL, but AKIPS is set, then we will try to auto-generate the INFOURL
+							elseif ($this->akipsbaseurl <> "" and $myobj->akips)
+							{
+								if($type == 'NODE')
+								{
+									//for a NODE, just take the NODE name as the device
+									//https://akips.yoursite.com/dashboard?mode=device;device_list=switch1
+									$url = $this->akipsbaseurl . '/dashboard?mode=device;device_list=' . $myobj->name;
+									$this->imap->setProp("href", $this->ProcessString($url,$myobj), $areaname);
+								}
+								if($type == 'LINK')
+								{
+									//split() is deprecated in php5, and remove in php7, so we use explode()
+									$parts = explode(':', $myobj->name);
+									//if format valid "device:interface" format? See also AKIPS Weathermap export script
+									if( count($parts) == 2 and $parts[0] <> "" and $parts[1] <> "" )
+									{
+										//https://akips.yoursite.com/dashboard?mode=interface;controls=interface;device=switch1;child=TenGigE1/3
+										$url = $this->akipsbaseurl . '/dashboard?mode=interface;controls=interface;device=' . $parts[0] . ';child=' . $parts[1];
+										$this->imap->setProp("href", $this->ProcessString($url,$myobj), $areaname);
+									}		
+								}
+							}
 							//infourltarget set?
 							if($myobj->infourltarget != '') {
 								$this->imap->setProp("extrahtml", 'target="' . $myobj->infourltarget . '"', $areaname);

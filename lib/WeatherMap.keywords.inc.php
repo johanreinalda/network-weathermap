@@ -9,6 +9,11 @@ $WM_config_keywords2 = array (
             array('GLOBAL',"/^\s*FONTDEFINE\s+(\d+)\s+(\S+)\s+(\d+)\s*$/i",'ReadConfig_Handle_FONTDEFINE'),
             array('GLOBAL',"/^\s*FONTDEFINE\s+(\d+)\s+(\S+)\s*$/i",'ReadConfig_Handle_FONTDEFINE'),
         ),
+	'AKIPSBASEURL' => array (
+            'GLOBAL',
+            '/^AKIPSBASEURL\s+(.*)\s*$/i',
+            array ('akipsbaseurl' => 1)
+	),),
         'KEYOUTLINECOLOR' => array (
             array (
             'GLOBAL',
@@ -348,6 +353,11 @@ $WM_config_keywords2 = array (
                 )
             ),
         ),
+        'AKIPS' => array (array (
+            'NODE',
+            "/^AKIPS\s+(.*)\s*$/i",
+            array ('akips' => 1)
+        ),),
         'INFOURL' => array (array (
             'NODE',
             '/^INFOURL\s+(.*)\s*$/i',
@@ -356,7 +366,7 @@ $WM_config_keywords2 = array (
                 'infourl[OUT]' => 1
             )
         ),),
-        'INFORURLTARGET' => array (array (
+        'INFOURLTARGET' => array (array (
             'NODE',
             "/^INFOURLTARGET\s+(.*)\s*$/i",
             array ('infourltarget' => 1)
@@ -729,6 +739,11 @@ $WM_config_keywords2 = array (
             '/^OUTNOTES\s+(.*)\s*$/i',
             array ('notestext[OUT]' => 1)
         ),),
+        'AKIPS' => array (array (
+            'LINK',
+            "/^AKIPS\s+(.*)\s*$/i",
+            array ('akips' => 1)
+        ),),
         'INFOURL' => array (array (
             'LINK',
             '/^INFOURL\s+(.*)\s*$/i',
@@ -737,7 +752,7 @@ $WM_config_keywords2 = array (
                 'infourl[OUT]' => 1
             )
         ),),
-        'INFORURLTARGET' => array (array (
+        'INFOURLTARGET' => array (array (
             'LINK',
             "/^INFOURLTARGET\s+(.*)\s*$/i",
             array ('infourltarget' => 1)

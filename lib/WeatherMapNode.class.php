@@ -17,7 +17,6 @@ class WeatherMapNode extends WeatherMapItem
 	var $labelangle;
 	var $name;
 	var $infourl = array();
-	var $infourltarget;
 	var $notes;
 	var $colours = array();
 	var $overliburl;
@@ -87,6 +86,7 @@ class WeatherMapNode extends WeatherMapItem
 				'iconscalew' => 0,
 				'iconscaleh' => 0,
 				'targets' => array(),
+				'akips' => 0,
 				'infourl' => array(IN=>'',OUT=>''),
 				'infourltarget' => '',
 				'notestext' => array(IN=>'',OUT=>''),
@@ -804,6 +804,7 @@ class WeatherMapNode extends WeatherMapItem
 					array('labelfontshadowcolour','LABELFONTSHADOWCOLOR',CONFIG_TYPE_COLOR),
 					array('labelbgcolour','LABELBGCOLOR',CONFIG_TYPE_COLOR),
 					array('labelfontcolour','LABELFONTCOLOR',CONFIG_TYPE_COLOR),
+					array('akips','AKIPS',CONFIG_TYPE_LITERAL),
 					array('infourltarget','INFOURLTARGET',CONFIG_TYPE_LITERAL)
 				);
 			
